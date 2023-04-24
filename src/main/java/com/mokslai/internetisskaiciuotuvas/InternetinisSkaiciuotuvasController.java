@@ -41,7 +41,7 @@ public class InternetinisSkaiciuotuvasController {
 
     public String skaiciuoti(@RequestParam HashMap <String , String> ivedimoSarasas, ModelMap isvedimoSarasas) {
         // Per url perduodamas raktas ( kintamasis ) turi pavadinima sk1
-        // Pagal rakta sk1 istraukiama reiksme pvz ( trakime vbartotojas ivede 8 )
+        // Pagal rakta sk1 istraukiama reiksme pvz ( tarkime vartotojas ivede 8 )
         // Vadinasi mums reikia konvertuoti is String i Int kad paskaiciuotumeme rezultata
         int sk1 = Integer.parseInt(ivedimoSarasas.get("sk1"));
         int sk2 = Integer.parseInt(ivedimoSarasas.get("sk2"));
