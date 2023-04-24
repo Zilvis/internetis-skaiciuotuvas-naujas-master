@@ -14,5 +14,4 @@ public class InternetisSkaiciuotuvasApplication {
 		// Spring karkasas paleis aplikacija tai yra startuos TomCat serveri.
 		SpringApplication.run(InternetisSkaiciuotuvasApplication.class, args);
 	}
-
 }

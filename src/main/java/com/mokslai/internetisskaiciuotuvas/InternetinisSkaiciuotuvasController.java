@@ -3,6 +3,8 @@ package com.mokslai.internetisskaiciuotuvas;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,7 +14,12 @@ import java.util.HashMap;
 
 // Web kontroleris leidzia viduje naudoti @RequestMapping.
 // @RestController anotacija nurodo , jog pvz: String tipo rezultatas turetu buti ispauzdinamas klijentui toks koks yra.
-@RestController
+
+// @Restcontroller anotacija naudojama tada kai frontend nenaudojam springo ( javaScript React Angular )
+// Dazniausiai grazinami formatai ( json , xml )
+// Tai yra negraziname vaizdo ( formos HTML JSP )
+// Kadangi mums reikia grazinti vaizda ( View ) pagal spring mvc naudosime anotacija @Controller
+@Controller
 
 // Zymi konfiguracijos komponenta viduje leidzia kurti bean per metodus su @Bean anotacija.
 // Si klases lygio anotacija nurodo spring karkasui "Atspeti" konfiguracija.
@@ -22,20 +29,23 @@ import java.util.HashMap;
 
 public class InternetinisSkaiciuotuvasController {
     // nebutina nurodyti method = RequestMethod.GET, value =
-    @RequestMapping(method = RequestMethod.GET, value = "/skaiciuoti")
+    // Kadangi skaiciuotuvo forma naudoja POST metoda cia irgi nurodysime POST
+    @RequestMapping(method = RequestMethod.POST, value = "/skaiciuoti")
     // RequestParam anotacija perduoda siuo atveju per url perduotus duomenis ( du skaiciai operacijos zenklas )
     // kurie patalpinami i sarasa ( raktas reiksme )
     // Pirmas String yra raktas (sk1 sk2 zenklas ) o antras - reiksme (8 , 5 , + )
     // TODO: Raktai tiek frontend tiek backend turi sutapti !
     // URL pvz: http://localhost:8080/skaiciuoti?sk1=2&sk2=3&zenklas=*
     // Encoder https://meyerweb.com/eric/tools/dencoder/
-    public String skaiciuoti(@RequestParam HashMap <String , String> skaiciai ) {
+
+
+    public String skaiciuoti(@RequestParam HashMap <String , String> ivedimoSarasas, ModelMap isvedimoSarasas) {
         // Per url perduodamas raktas ( kintamasis ) turi pavadinima sk1
         // Pagal rakta sk1 istraukiama reiksme pvz ( trakime vbartotojas ivede 8 )
         // Vadinasi mums reikia konvertuoti is String i Int kad paskaiciuotumeme rezultata
-        int sk1 = Integer.parseInt(skaiciai.get("sk1"));
-        int sk2 = Integer.parseInt(skaiciai.get("sk2"));
-        String zenklas = skaiciai.get("zenklas");
+        int sk1 = Integer.parseInt(ivedimoSarasas.get("sk1"));
+        int sk2 = Integer.parseInt(ivedimoSarasas.get("sk2"));
+        String zenklas = ivedimoSarasas.get("zenklas");
 
         double ats = 0;
         if (zenklas.equals("+")) {
@@ -47,7 +57,17 @@ public class InternetinisSkaiciuotuvasController {
         } else if (zenklas.equals("/") && sk2 != 0){
             ats = sk1 / sk2;
         }
-        return sk1 + " "+ zenklas + " " + sk2 + " = " +ats;
+
+        // Ivedimo sarasas naudojamas siusti duomenis is Spring MVC controlerio i Jsp faila ( vaizda )
+        isvedimoSarasas.put("sk1", sk1);
+        isvedimoSarasas.put("sk2", sk2);
+        isvedimoSarasas.put("zenklas", zenklas);
+        isvedimoSarasas.put("rezultatas", ats);
+
+        // Grazinamas vaizdas ( forma )
+        // Svarbu nurodyti per Aplication.properties prefix ir suffix
+        // Nes pagal tai ieskos vaizdo projekte
+        return "skaiciuoti";
         // ApplicationContext yra interface skirtas suteikti informacija apie aplikacijos konfiguracija.
         // Siuo atveju naudojama konfiguracija paimama is beans.xml failo
         //ApplicationContext appContext = new ClassPathXmlApplicationContext("beans.xml");
@@ -61,5 +81,11 @@ public class InternetinisSkaiciuotuvasController {
 //                "&nbsp;&nbsp; dauginti  </br>"+
 //                "&nbsp;&nbsp; dalinti   </br>"+
 //                "&nbsp;&nbsp; atimtis   </br></p>";
+    }
+    @RequestMapping(method = RequestMethod.GET, value = "/")
+    public String rodytiPagrindiniPuslapi (){
+
+        // Graziname jsp faila kuris turi buti talpinamas "webapp -> WEB-INF -> JSP" aplanke
+        return "skaiciuotuvas";
     }
 }
