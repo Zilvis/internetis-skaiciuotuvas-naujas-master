@@ -1,9 +1,11 @@
-package com.mokslai.internetisskaiciuotuvas;
+package com.mokslai.internetisskaiciuotuvas.controller;
 
+import com.mokslai.internetisskaiciuotuvas.Service.SkaiciaiService;
+import com.mokslai.internetisskaiciuotuvas.model.SkaiciusZenklas;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -28,6 +30,13 @@ import java.util.HashMap;
 @EnableAutoConfiguration
 
 public class InternetinisSkaiciuotuvasController {
+
+    // Kaip perduodami duomenys skirtingiems komponentams:
+    // Vartotojas -> InternetinisSkaiciuotuvasController -> SkaiciaiServiceImpl -> SkaiciaiZenklasDAOImpl
+    @Autowired
+    @Qualifier("SkaiciaiService")
+    public SkaiciaiService skaiciaiService;
+
     // nebutina nurodyti method = RequestMethod.GET, value =
     // Kadangi skaiciuotuvo forma naudoja POST metoda cia irgi nurodysime POST
     @RequestMapping(method = RequestMethod.POST, value = "/skaiciuoti")
@@ -65,7 +74,7 @@ public class InternetinisSkaiciuotuvasController {
             } else if (zenklas.equals("*")){
                 rezultatas = sk1 * sk2;
             } else if (zenklas.equals("/") && sk2 != 0){
-                rezultatas = sk1 / sk2;
+                rezultatas = (double) sk1 / sk2;
             }
 
             // Ivedimo sarasas naudojamas siusti duomenis is Spring MVC controlerio i Jsp faila ( vaizda )
@@ -73,6 +82,9 @@ public class InternetinisSkaiciuotuvasController {
             isvedimoSarasas.put("sk2", sk2);
             isvedimoSarasas.put("zenklas", zenklas);
             isvedimoSarasas.put("rezultatas", rezultatas);
+
+            // Kreipiames i service kuris savo ruoztu kreipiasi i DAO ir issaugoja irasa duomenu bazeje
+            skaiciaiService.insert(new SkaiciusZenklas(sk1,sk2,rezultatas,zenklas));
 
             // Grazinamas vaizdas ( forma )
             // Svarbu nurodyti per Aplication.properties prefix ir suffix

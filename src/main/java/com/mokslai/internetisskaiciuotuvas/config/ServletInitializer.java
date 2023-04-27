@@ -1,5 +1,6 @@
-package com.mokslai.internetisskaiciuotuvas;
+package com.mokslai.internetisskaiciuotuvas.config;
 
+import com.mokslai.internetisskaiciuotuvas.InternetinisSkaiciuotuvasApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
@@ -11,7 +12,7 @@ public class ServletInitializer extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(InternetisSkaiciuotuvasApplication.class);
+		return application.sources(InternetinisSkaiciuotuvasApplication.class);
 	}
 
 }
