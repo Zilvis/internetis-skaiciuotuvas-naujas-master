@@ -67,14 +67,23 @@ public class InternetinisSkaiciuotuvasController {
             int sk2 = Integer.parseInt(ivedimoSarasas.get("sk2"));
             String zenklas = ivedimoSarasas.get("zenklas");
             double rezultatas = 0;
-            if (zenklas.equals("+")) {
-                rezultatas = sk1 + sk2;
-            } else if (zenklas.equals("-")) {
-                rezultatas = sk1 - sk2;
-            } else if (zenklas.equals("*")){
-                rezultatas = sk1 * sk2;
-            } else if (zenklas.equals("/") && sk2 != 0){
-                rezultatas = (double) sk1 / sk2;
+            switch (zenklas) {
+                case "+":
+                    rezultatas = sk1 + sk2;
+                    break;
+                case "-":
+                    rezultatas = sk1 - sk2;
+                    break;
+                case "*":
+                    rezultatas = sk1 * sk2;
+                    break;
+                case "/":
+                    if (sk2 != 0) {
+                        rezultatas = (double) sk1 / sk2;
+                    }else {
+                        return "error";
+                    }
+                    break;
             }
 
             // Ivedimo sarasas naudojamas siusti duomenis is Spring MVC controlerio i Jsp faila ( vaizda )
