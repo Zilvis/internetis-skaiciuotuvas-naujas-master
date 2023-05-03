@@ -122,4 +122,41 @@ public class InternetinisSkaiciuotuvasController {
         // Graziname jsp faila kuris turi buti talpinamas "webapp -> WEB-INF -> JSP" aplanke
         return "skaiciuotuvas";
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/skaiciai")
+    public String getAllNumbers (Model model){
+        model.addAttribute("numbers", skaiciaiService.getAll());
+        return "numbers";
+    }
+
+    // id ateina is FronEnd vartotojui pasirinkus konkretu irasa
+
+    @RequestMapping(method = RequestMethod.GET, value = "/show{id}")
+    public String getById (@RequestParam ("id") int id,Model model){
+        model.addAttribute("number", skaiciaiService.getById(id));
+        return "number";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/delete{id")
+    public String removeById (@RequestParam ("id") int id,Model model){
+        skaiciaiService.delete(id);
+        model.addAttribute("numbers", skaiciaiService.getAll());
+        return "delete";
+    }
+
+    // Atnaujinant irasa pirmiausia reikia ji parodyti
+    @RequestMapping(method = RequestMethod.GET, value = "/update{id}")
+    public String updateById (@RequestParam ("id") int id,Model model){
+        model.addAttribute("number", skaiciaiService.getById(id));
+        return "update";
+    }
+
+    // Kadangi forma naudoja metoda POST cia irgi nurodome POST
+    @RequestMapping(method = RequestMethod.POST, value = "/updateNumber")
+    public String updateNumber (@ModelAttribute ("number") SkaiciusZenklas number){
+        skaiciaiService.update(number);
+        // Nukreipia vartotoja i iraso atvaizdavimo puslapi
+        return "redirect:/show?id=" + number.toString();
+    }
+
 }

@@ -43,6 +43,11 @@ public class SkaiciusZenklas {
         this.zenklas = zenklas;
     }
 
+    // setId butinas kad model vaiksciotu tarp front end ir back end
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
@@ -89,4 +94,6 @@ public class SkaiciusZenklas {
                 ", zenklas='" + zenklas + '\'' +
                 '}';
     }
+
+
 }

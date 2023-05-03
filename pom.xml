@@ -80,6 +80,15 @@
 			<version>2.3.2</version>
 		</dependency>
 
+		<!-- JST: java server pages tag library -->
+		<!-- JSP jstl anotacijoms ( pvz foreach, URL , param ) -->
+		<!-- https://mvnrepository.com/artifact/javax.servlet.jsp.jstl/jstl -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
